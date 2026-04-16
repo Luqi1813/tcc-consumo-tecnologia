@@ -7,6 +7,7 @@ from pathlib import Path
 
 import gspread
 import streamlit as st
+import streamlit.components.v1 as components
 from google.oauth2.service_account import Credentials
 
 
@@ -624,6 +625,13 @@ def aplicar_css_global() -> None:
                 margin: 8px 8px 8px 0;
             }
 
+            .checkout-actions-label {
+                color: #334155 !important;
+                font-size: 0.95rem;
+                font-weight: 900;
+                margin: 18px 0 8px 0;
+            }
+
             .purchase-intent-box {
                 max-width: 860px;
                 margin: 24px auto 8px auto;
@@ -680,8 +688,8 @@ def aplicar_css_global() -> None:
             }
 
             .purchase-actions-native {
-                max-width: 820px;
-                margin: 14px auto 0 auto;
+                max-width: 100%;
+                margin: 8px 0 0 0;
             }
 
             .purchase-actions-native div[data-testid="stButton"] {
@@ -690,12 +698,16 @@ def aplicar_css_global() -> None:
             }
 
             .purchase-actions-native div[data-testid="stButton"] > button {
-                min-height: 54px;
+                min-height: 48px;
                 width: 100%;
                 border-radius: 8px;
-                font-size: 0.98rem;
+                font-size: 0.92rem;
                 font-weight: 950;
                 box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+            }
+
+            .review-screen-anchor {
+                height: 0;
             }
 
             .blog-card {
@@ -1123,6 +1135,10 @@ def aplicar_css_global() -> None:
                 gap: 18px;
             }
 
+            .checkout-shell .purchase-actions-native {
+                margin-top: 10px;
+            }
+
             .checkout-image {
                 height: 250px;
             }
@@ -1167,6 +1183,25 @@ def aplicar_css_global() -> None:
             div[data-testid="stButton"] > button {
                 min-height: 50px;
                 font-size: 1rem;
+            }
+
+            @media (max-width: 760px) {
+                .review-screen-anchor {
+                    height: 0;
+                }
+
+                .blog-card,
+                .instagram-post {
+                    margin-top: 8px;
+                }
+
+                .checkout-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .checkout-image {
+                    height: 190px;
+                }
             }
         </style>
         """,
@@ -1220,6 +1255,28 @@ def limpar_query_params() -> None:
 def avancar_para(tela: int) -> None:
     st.session_state.tela = tela
     st.rerun()
+
+
+def rolar_para_topo() -> None:
+    """Forca o navegador a voltar para o topo apos uma troca de tela."""
+    components.html(
+        """
+        <script>
+            const scrollTop = () => {
+                window.parent.scrollTo(0, 0);
+                window.parent.document.documentElement.scrollTop = 0;
+                window.parent.document.body.scrollTop = 0;
+            };
+
+            scrollTop();
+            setTimeout(scrollTop, 50);
+            setTimeout(scrollTop, 200);
+            setTimeout(scrollTop, 500);
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
 
 
 def garantir_fluxo_valido() -> None:
@@ -1584,6 +1641,7 @@ def render_pagina_compra(fone_final_key: str) -> None:
                         <div>Compra segura</div>
                         <div>Garantia 12 meses</div>
                     </div>
+                    <div class="checkout-actions-label">Escolha sua ação nesta loja simulada:</div>
                 </div>
             </div>
         </div>
@@ -1634,12 +1692,15 @@ def tela_1_introducao_e_escolha() -> None:
 
 
 def tela_2_intervencao() -> None:
+    rolar_para_topo()
+
     fone_inicial = produto_nome(st.session_state.fone_inicial_key)
     fone_rejeitado = produto_nome(st.session_state.fone_rejeitado_key)
     grupo = st.session_state.grupo_ab
 
     render_carrinho_fixo(st.session_state.fone_inicial_key)
 
+    st.markdown('<div class="review-screen-anchor"></div>', unsafe_allow_html=True)
     st.title("Avaliação encontrada")
 
     if grupo == "Grupo A":
@@ -1685,15 +1746,6 @@ def tela_3_clique_e_escalas() -> None:
     )
 
     render_pagina_compra(st.session_state.fone_final_key)
-
-    st.markdown(
-        """
-        <div class="purchase-intent-box">
-            <h3>O que você faria agora?</h3>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
     st.markdown('<div class="purchase-actions-native">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3, gap="small")
