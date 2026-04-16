@@ -107,6 +107,32 @@ def aplicar_css_global() -> None:
     st.markdown(
         """
         <style>
+            #MainMenu {
+                visibility: hidden;
+            }
+
+            header {
+                visibility: hidden;
+            }
+
+            footer {
+                visibility: hidden;
+            }
+
+            [data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0;
+                position: fixed;
+            }
+
+            [data-testid="stDecoration"] {
+                display: none;
+            }
+
+            [data-testid="stStatusWidget"] {
+                visibility: hidden;
+            }
+
             :root {
                 --bg: #f5f7fb;
                 --ink: #172033;
