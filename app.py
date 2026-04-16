@@ -85,16 +85,16 @@ AVALIACOES = {
 
 COLUNAS_CSV = [
     "Nome",
-    "idade",
-    "genero",
-    "Grupo",
-    "Expert ou influenciador",
-    "Se manteve ou trocou",
-    "acao_clique_simulado",
-    "likert_avaliacao_ajudou",
-    "likert_credibilidade",
-    "likert_compraria_recomendados",
-    "data_hora_resposta",
+    "Idade",
+    "Gênero",
+    "Grupo Experimental",
+    "Tipo de Avaliador",
+    "Decisão Após Avaliação",
+    "Ação no Clique Simulado",
+    "Likert 1 - Avaliação Ajudou na Decisão",
+    "Likert 2 - Credibilidade da Avaliação",
+    "Likert 3 - Compraria por Recomendação",
+    "Data e Hora da Resposta",
 ]
 
 
@@ -1213,16 +1213,16 @@ def montar_linha_resposta() -> dict:
 
     return {
         "Nome": st.session_state.nome_participante,
-        "idade": st.session_state.idade,
-        "genero": st.session_state.genero,
-        "Grupo": st.session_state.grupo_ab,
-        "Expert ou influenciador": AVALIACOES[st.session_state.grupo_ab]["tipo"],
-        "Se manteve ou trocou": manteve_ou_trocou,
-        "acao_clique_simulado": st.session_state.acao_clique_simulado,
-        "likert_avaliacao_ajudou": st.session_state.likert_avaliacao_ajudou,
-        "likert_credibilidade": st.session_state.likert_credibilidade,
-        "likert_compraria_recomendados": st.session_state.likert_compraria_recomendados,
-        "data_hora_resposta": datetime.now().isoformat(timespec="seconds"),
+        "Idade": st.session_state.idade,
+        "Gênero": st.session_state.genero,
+        "Grupo Experimental": st.session_state.grupo_ab,
+        "Tipo de Avaliador": AVALIACOES[st.session_state.grupo_ab]["tipo"],
+        "Decisão Após Avaliação": manteve_ou_trocou,
+        "Ação no Clique Simulado": st.session_state.acao_clique_simulado,
+        "Likert 1 - Avaliação Ajudou na Decisão": st.session_state.likert_avaliacao_ajudou,
+        "Likert 2 - Credibilidade da Avaliação": st.session_state.likert_credibilidade,
+        "Likert 3 - Compraria por Recomendação": st.session_state.likert_compraria_recomendados,
+        "Data e Hora da Resposta": datetime.now().isoformat(timespec="seconds"),
     }
 
 
