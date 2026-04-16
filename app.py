@@ -84,16 +84,12 @@ AVALIACOES = {
 
 
 COLUNAS_CSV = [
-    "id_usuario",
-    "nome_participante",
+    "Nome",
     "idade",
     "genero",
-    "grupo_ab",
-    "grupo_tipo",
-    "fone_inicial",
-    "fone_rejeitado",
-    "fone_final",
-    "houve_troca",
+    "Grupo",
+    "Expert ou influenciador",
+    "Se manteve ou trocou",
     "acao_clique_simulado",
     "likert_avaliacao_ajudou",
     "likert_credibilidade",
@@ -1213,17 +1209,15 @@ def garantir_fluxo_valido() -> None:
 
 
 def montar_linha_resposta() -> dict:
+    manteve_ou_trocou = "Trocou" if st.session_state.houve_troca == "Sim" else "Manteve"
+
     return {
-        "id_usuario": st.session_state.id_usuario,
-        "nome_participante": st.session_state.nome_participante,
+        "Nome": st.session_state.nome_participante,
         "idade": st.session_state.idade,
         "genero": st.session_state.genero,
-        "grupo_ab": st.session_state.grupo_ab,
-        "grupo_tipo": AVALIACOES[st.session_state.grupo_ab]["tipo"],
-        "fone_inicial": produto_nome(st.session_state.fone_inicial_key),
-        "fone_rejeitado": produto_nome(st.session_state.fone_rejeitado_key),
-        "fone_final": produto_nome(st.session_state.fone_final_key),
-        "houve_troca": st.session_state.houve_troca,
+        "Grupo": st.session_state.grupo_ab,
+        "Expert ou influenciador": AVALIACOES[st.session_state.grupo_ab]["tipo"],
+        "Se manteve ou trocou": manteve_ou_trocou,
         "acao_clique_simulado": st.session_state.acao_clique_simulado,
         "likert_avaliacao_ajudou": st.session_state.likert_avaliacao_ajudou,
         "likert_credibilidade": st.session_state.likert_credibilidade,
@@ -1260,6 +1254,8 @@ def salvar_resposta_google_sheets(linha: dict) -> bool:
     valores = worksheet.get_all_values()
     if not valores:
         worksheet.append_row(COLUNAS_CSV, value_input_option="USER_ENTERED")
+    elif valores[0] != COLUNAS_CSV:
+        worksheet.insert_row(COLUNAS_CSV, index=1, value_input_option="USER_ENTERED")
 
     worksheet.append_row(
         [linha.get(coluna, "") for coluna in COLUNAS_CSV],
